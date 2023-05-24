@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body,
+input,
+textarea,
+button {
+  font-family: "Roboto";
+  font-weight: 400;
+}
+
+body {
+  background-color: theme("colors.gray900");
+  color: theme("colors.gray100");
+}
+
+@layer components {
+  .img-hover {
+    &:hover {
+      footer {
+        @apply translate-y-inWindow opacity-100;
+      }
+    }
+  }
+}

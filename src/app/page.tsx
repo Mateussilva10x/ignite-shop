@@ -1,10 +1,15 @@
 "use client";
 import Image from "next/image";
+
 import { useKeenSlider } from "keen-slider/react";
+
+import { stripe } from "@/lib/stripe";
+import { GetServerSideProps } from "next";
 
 import camiseta1 from "../assets/1.png";
 import camiseta2 from "../assets/2.png";
 import camiseta3 from "../assets/3.png";
+import camiseta4 from "../assets/4.png";
 
 import "keen-slider/keen-slider.min.css";
 
@@ -60,7 +65,7 @@ export default function Home() {
       </a>
       <a className="img-hover keen-slider__slide relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gradient-to-b from-green200 to-purple100">
         <Image
-          src={camiseta1}
+          src={camiseta4}
           width={520}
           height={420}
           alt=""
@@ -74,3 +79,22 @@ export default function Home() {
     </main>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const response = await stripe.products.list();
+
+  console.log(response);
+  const products = response.data.map((product) => {
+    return {
+      id: product.id,
+      name: product.name,
+      imageUrl: product.images[0],
+    };
+  });
+
+  return {
+    props: {
+      list: [1, 2, 3],
+    },
+  };
+};

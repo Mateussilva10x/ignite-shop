@@ -29,9 +29,15 @@ module.exports = {
       minHeight: {
         shopScreen: 656,
       },
+      height: {
+        product: "656px",
+      },
       translate: {
         outWindow: "110%",
         inWindow: "0%",
+      },
+      gridTemplateColumns: {
+        shop: "1fr 1fr",
       },
     },
   },

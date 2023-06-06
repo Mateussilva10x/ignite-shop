@@ -1,100 +1,84 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 
 import { useKeenSlider } from "keen-slider/react";
 
-import { stripe } from "@/lib/stripe";
-import { GetServerSideProps } from "next";
-
-import camiseta1 from "../assets/1.png";
-import camiseta2 from "../assets/2.png";
-import camiseta3 from "../assets/3.png";
-import camiseta4 from "../assets/4.png";
-
 import "keen-slider/keen-slider.min.css";
+import Stripe from "stripe";
 
-export default function Home() {
+async function getProducts() {
+  const res = await fetch(
+    `https://api.stripe.com/v1/products?expand[]=data.default_price`,
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY}`,
+      },
+      next: { revalidate: 60 * 60 * 2 },
+    }
+  );
+
+  const { data: products } = await res.json();
+
+  const filteredProducts = products.map((product: any) => {
+    const price = product.default_price as Stripe.Price;
+
+    return {
+      id: product.id,
+      name: product.name,
+      imageUrl: product.images[0],
+      price: new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }).format((price.unit_amount as number) / 100),
+    };
+  });
+
+  return filteredProducts;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  imageUrl: string;
+  price: number;
+}
+
+export default async function Home() {
   const [sliderRef] = useKeenSlider({
     slides: {
       perView: 3,
       spacing: 48,
     },
   });
+  const products = await getProducts();
 
   return (
     <main className="keen-slider flex  min-h-shopScreen w-full" ref={sliderRef}>
-      <a className="img-hover keen-slider__slide relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gradient-to-b from-green200 to-purple100">
-        <Image
-          src={camiseta1}
-          width={520}
-          height={420}
-          alt=""
-          className="object-cover"
-        />
-        <footer className=" img-hover absolute bottom-1 left-1 right-1 flex translate-y-outWindow items-center justify-between rounded-md bg-black600 p-8 opacity-0 transition delay-150 ease-in-out">
-          <strong className="text-lg">Camiseta X</strong>
-          <span className="text-xl font-bold text-green300">R$ 79,98</span>
-        </footer>
-      </a>
-
-      <a className="img-hover keen-slider__slide relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gradient-to-b from-green200 to-purple100">
-        <Image
-          src={camiseta2}
-          width={520}
-          height={420}
-          alt=""
-          className="object-cover"
-        />
-        <footer className=" img-hover absolute bottom-1 left-1 right-1 flex translate-y-outWindow items-center justify-between rounded-md bg-black600 p-8 opacity-0 transition delay-150 ease-in-out">
-          <strong className="text-lg">Camiseta X</strong>
-          <span className="text-xl font-bold text-green300">R$ 79,98</span>
-        </footer>
-      </a>
-      <a className="img-hover keen-slider__slide relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gradient-to-b from-green200 to-purple100">
-        <Image
-          src={camiseta3}
-          width={520}
-          height={420}
-          alt=""
-          className="object-cover"
-        />
-        <footer className=" img-hover absolute bottom-1 left-1 right-1 flex translate-y-outWindow items-center justify-between rounded-md bg-black600 p-8 opacity-0 transition delay-150 ease-in-out">
-          <strong className="text-lg">Camiseta X</strong>
-          <span className="text-xl font-bold text-green300">R$ 79,98</span>
-        </footer>
-      </a>
-      <a className="img-hover keen-slider__slide relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gradient-to-b from-green200 to-purple100">
-        <Image
-          src={camiseta4}
-          width={520}
-          height={420}
-          alt=""
-          className="object-cover"
-        />
-        <footer className=" img-hover absolute bottom-1 left-1 right-1 flex translate-y-outWindow items-center justify-between rounded-md bg-black600 p-8 opacity-0 transition delay-150 ease-in-out">
-          <strong className="text-lg">Camiseta X</strong>
-          <span className="text-xl font-bold text-green300">R$ 79,98</span>
-        </footer>
-      </a>
+      {products?.map((product: Product) => {
+        return (
+          <Link
+            key={product.id}
+            href={`/product/${product.id}`}
+            className="img-hover keen-slider__slide relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gradient-to-b from-green200 to-purple100"
+            prefetch={false}
+          >
+            <Image
+              src={product.imageUrl}
+              width={520}
+              height={420}
+              alt=""
+              className="object-cover"
+            />
+            <footer className=" img-hover absolute bottom-1 left-1 right-1 flex translate-y-outWindow items-center justify-between rounded-md bg-black600 p-8 opacity-0 transition delay-150 ease-in-out">
+              <strong className="text-lg">{product.name}</strong>
+              <span className="text-xl font-bold text-green300">
+                {product.price}
+              </span>
+            </footer>
+          </Link>
+        );
+      })}
     </main>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const response = await stripe.products.list();
-
-  console.log(response);
-  const products = response.data.map((product) => {
-    return {
-      id: product.id,
-      name: product.name,
-      imageUrl: product.images[0],
-    };
-  });
-
-  return {
-    props: {
-      list: [1, 2, 3],
-    },
-  };
-};

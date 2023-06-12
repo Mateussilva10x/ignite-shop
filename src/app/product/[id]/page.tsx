@@ -1,3 +1,4 @@
+"use client";
 import Stripe from "stripe";
 import Image from "next/image";
 
@@ -23,6 +24,7 @@ async function getProduct(id: string) {
       style: "currency",
       currency: "BRL",
     }).format((price?.unit_amount as number) / 100),
+    defaultPriceId: price.id,
   };
 
   return filteredProducts;
@@ -34,6 +36,19 @@ export default async function Product({
   params: { id: string };
 }) {
   const product = await getProduct(id);
+
+  const handleByProduct = async () => {
+    const response = await fetch("/api/checkout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ priceId: product.defaultPriceId }),
+    });
+    console.log(response);
+    const data = await response.json();
+    console.log(data);
+  };
 
   return (
     <main className="mx-auto grid max-w-6xl grid-cols-shop items-stretch gap-16">
@@ -55,7 +70,10 @@ export default async function Product({
           {product.description}
         </p>
 
-        <button className="mt-auto cursor-pointer rounded-lg border-0 bg-green500 p-5 text-md font-bold text-white hover:bg-green300">
+        <button
+          className="mt-auto cursor-pointer rounded-lg border-0 bg-green500 p-5 text-md font-bold text-white hover:bg-green300"
+          onClick={handleByProduct}
+        >
           Comprar agora
         </button>
       </div>

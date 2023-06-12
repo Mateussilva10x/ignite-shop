@@ -1,11 +1,13 @@
 import { NextApiRequest } from "next";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import Stripe from "stripe";
 
-export async function POST(req: NextApiRequest) {
-  const { priceId } = req?.body;
-  console.log(req.body);
+type Price = {
+  priceId?: string;
+};
 
+export async function POST(request: Request) {
+  const data: Price = await request.json();
   const successUrl = `${process.env.NEXT_PUBLIC_URL}/success`;
   const cancelUrl = `${process.env.NEXT_PUBLIC_URL}/`;
 
@@ -20,7 +22,7 @@ export async function POST(req: NextApiRequest) {
     mode: "payment",
     line_items: [
       {
-        price: "price_1NBjTzFBf79SF7nWAHA0ToXg",
+        price: data.priceId,
         quantity: 1,
       },
     ],

@@ -47,7 +47,7 @@ export default async function Product({
     });
     console.log(response);
     const data = await response.json();
-    console.log(data);
+    window.location.href = data.checkoutUrl;
   };
 
   return (

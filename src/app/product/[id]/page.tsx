@@ -1,6 +1,7 @@
 "use client";
 import Stripe from "stripe";
 import Image from "next/image";
+import { useState } from "react";
 
 async function getProduct(id: string) {
   const res = await fetch(
@@ -35,19 +36,28 @@ export default async function Product({
 }: {
   params: { id: string };
 }) {
+  const [isCreatingCheckout, setIsCreatingCheckout] = useState(false);
+
   const product = await getProduct(id);
 
   const handleByProduct = async () => {
-    const response = await fetch("/api/checkout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ priceId: product.defaultPriceId }),
-    });
-    console.log(response);
-    const data = await response.json();
-    window.location.href = data.checkoutUrl;
+    try {
+      setIsCreatingCheckout(true);
+
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ priceId: product.defaultPriceId }),
+      });
+      const data = await response.json();
+      window.location.href = data.checkoutUrl;
+    } catch (err) {
+      setIsCreatingCheckout(false);
+
+      alert("Falha ao Redirecionar ao checkout!");
+    }
   };
 
   return (
@@ -73,6 +83,7 @@ export default async function Product({
         <button
           className="mt-auto cursor-pointer rounded-lg border-0 bg-green500 p-5 text-md font-bold text-white hover:bg-green300"
           onClick={handleByProduct}
+          disabled={isCreatingCheckout}
         >
           Comprar agora
         </button>

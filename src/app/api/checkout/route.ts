@@ -8,6 +8,11 @@ type Price = {
 
 export async function POST(request: Request) {
   const data: Price = await request.json();
+
+  if (!data) {
+    return NextResponse.json({ error: "Price not found" });
+  }
+
   const successUrl = `${process.env.NEXT_PUBLIC_URL}/success`;
   const cancelUrl = `${process.env.NEXT_PUBLIC_URL}/`;
 

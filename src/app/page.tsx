@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import Head from "next/head";
 
 import { useKeenSlider } from "keen-slider/react";
 
@@ -54,31 +55,39 @@ export default async function Home() {
   const products = await getProducts();
 
   return (
-    <main className="keen-slider flex  min-h-shopScreen w-full" ref={sliderRef}>
-      {products?.map((product: Product) => {
-        return (
-          <Link
-            key={product.id}
-            href={`/product/${product.id}`}
-            className="img-hover keen-slider__slide relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gradient-to-b from-green200 to-purple100"
-            prefetch={false}
-          >
-            <Image
-              src={product.imageUrl}
-              width={520}
-              height={420}
-              alt=""
-              className="object-cover"
-            />
-            <footer className=" img-hover absolute bottom-1 left-1 right-1 flex translate-y-outWindow items-center justify-between rounded-md bg-black600 p-8 opacity-0 transition delay-150 ease-in-out">
-              <strong className="text-lg">{product.name}</strong>
-              <span className="text-xl font-bold text-green300">
-                {product.price}
-              </span>
-            </footer>
-          </Link>
-        );
-      })}
-    </main>
+    <>
+      <Head>
+        <title>Home | Ignite Shop</title>
+      </Head>
+      <main
+        className="keen-slider flex  min-h-shopScreen w-full"
+        ref={sliderRef}
+      >
+        {products?.map((product: Product) => {
+          return (
+            <Link
+              key={product.id}
+              href={`/product/${product.id}`}
+              className="img-hover keen-slider__slide relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gradient-to-b from-green200 to-purple100"
+              prefetch={false}
+            >
+              <Image
+                src={product.imageUrl}
+                width={520}
+                height={420}
+                alt=""
+                className="object-cover"
+              />
+              <footer className=" img-hover absolute bottom-1 left-1 right-1 flex translate-y-outWindow items-center justify-between rounded-md bg-black600 p-8 opacity-0 transition delay-150 ease-in-out">
+                <strong className="text-lg">{product.name}</strong>
+                <span className="text-xl font-bold text-green300">
+                  {product.price}
+                </span>
+              </footer>
+            </Link>
+          );
+        })}
+      </main>
+    </>
   );
 }

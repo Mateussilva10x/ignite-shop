@@ -2,6 +2,7 @@
 import Stripe from "stripe";
 import Image from "next/image";
 import { useState } from "react";
+import Head from "next/head";
 
 async function getProduct(id: string) {
   const res = await fetch(
@@ -61,33 +62,38 @@ export default async function Product({
   };
 
   return (
-    <main className="mx-auto grid max-w-6xl grid-cols-shop items-stretch gap-16">
-      <div className="flex h-product w-full max-w-xl items-center justify-center rounded-lg bg-gradient-to-b from-green200 to-purple100 p-1">
-        <Image
-          src={product.imageUrl}
-          width={520}
-          height={420}
-          alt=""
-          className="object-cover"
-        />
-      </div>
-      <div className="flex flex-col">
-        <h1 className="text-2xl text-gray300">{product.name}</h1>
-        <span className="mt-4 block text-2xl text-green300">
-          {product.price}
-        </span>
-        <p className="mt-10 text-md leading-6 text-gray300">
-          {product.description}
-        </p>
+    <>
+      <Head>
+        <title>{product.name} | Ignite Shop</title>
+      </Head>
+      <main className="mx-auto grid max-w-6xl grid-cols-shop items-stretch gap-16">
+        <div className="flex h-product w-full max-w-xl items-center justify-center rounded-lg bg-gradient-to-b from-green200 to-purple100 p-1">
+          <Image
+            src={product.imageUrl}
+            width={520}
+            height={420}
+            alt=""
+            className="object-cover"
+          />
+        </div>
+        <div className="flex flex-col">
+          <h1 className="text-2xl text-gray300">{product.name}</h1>
+          <span className="mt-4 block text-2xl text-green300">
+            {product.price}
+          </span>
+          <p className="mt-10 text-md leading-6 text-gray300">
+            {product.description}
+          </p>
 
-        <button
-          className="mt-auto cursor-pointer rounded-lg border-0 bg-green500 p-5 text-md font-bold text-white hover:bg-green300"
-          onClick={handleByProduct}
-          disabled={isCreatingCheckout}
-        >
-          Comprar agora
-        </button>
-      </div>
-    </main>
+          <button
+            className="mt-auto cursor-pointer rounded-lg border-0 bg-green500 p-5 text-md font-bold text-white hover:bg-green300"
+            onClick={handleByProduct}
+            disabled={isCreatingCheckout}
+          >
+            Comprar agora
+          </button>
+        </div>
+      </main>
+    </>
   );
 }

@@ -25,8 +25,10 @@ module.exports = {
       },
       maxWidth: {
         shopScreen: "calc(100vw - ((100vw - 1180px) / 2 ))",
+        successScreen: 130,
       },
       minHeight: {
+        successScreen: 145,
         shopScreen: 656,
       },
       height: {

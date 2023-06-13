@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Price not found" });
   }
 
-  const successUrl = `${process.env.NEXT_PUBLIC_URL}/success`;
+  const successUrl = `${process.env.NEXT_PUBLIC_URL}/success?session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl = `${process.env.NEXT_PUBLIC_URL}/`;
 
   const stripe = new Stripe(

@@ -1,4 +1,4 @@
-import LogoImg from "../assets/ignite.png";
+import LogoImg from "../assets/Logo.png";
 
 import "../styles/global.scss";
 import Image from "next/image";
@@ -28,7 +28,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <div className="min-h-screen ml-auto flex max-w-shopScreen flex-col items-start justify-center">
+        <div className="ml-auto flex min-h-screen max-w-shopScreen flex-col items-start justify-center">
           <header className="w-full py-8">
             <Image src={LogoImg} alt="logo" />
           </header>

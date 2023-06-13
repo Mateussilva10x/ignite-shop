@@ -86,7 +86,7 @@ export default async function Product({
           </p>
 
           <button
-            className="mt-auto cursor-pointer rounded-lg border-0 bg-green500 p-5 text-md font-bold text-white hover:bg-green300"
+            className="mt-auto cursor-pointer rounded-lg border-0 bg-green500 p-5 text-md font-bold text-white hover:bg-green300 disabled:bg-green500 disabled:opacity-50"
             onClick={handleByProduct}
             disabled={isCreatingCheckout}
           >

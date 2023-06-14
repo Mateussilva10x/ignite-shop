@@ -7,6 +7,8 @@ import { useKeenSlider } from "keen-slider/react";
 
 import "keen-slider/keen-slider.min.css";
 import Stripe from "stripe";
+import { Loader } from "@/components/Loader.";
+import { useState } from "react";
 
 async function getProducts() {
   const res = await fetch(
@@ -52,13 +54,12 @@ export default async function Home() {
       spacing: 48,
     },
   });
+  const [isLoading, setIsLoading] = useState(false);
   const products = await getProducts();
 
   return (
     <>
-      <Head>
-        <title>Home | Ignite Shop</title>
-      </Head>
+      <Loader isLoading={isLoading} />
       <main
         className="keen-slider flex  min-h-shopScreen w-full"
         ref={sliderRef}
@@ -70,6 +71,7 @@ export default async function Home() {
               href={`/product/${product.id}`}
               className="img-hover keen-slider__slide relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gradient-to-b from-green200 to-purple100"
               prefetch={false}
+              onClick={() => setIsLoading(true)}
             >
               <Image
                 src={product.imageUrl}

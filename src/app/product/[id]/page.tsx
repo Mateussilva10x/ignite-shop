@@ -2,7 +2,8 @@
 import Stripe from "stripe";
 import Image from "next/image";
 import { useState } from "react";
-import Head from "next/head";
+import { Loader } from "@/components/Loader.";
+import { Metadata, ResolvingMetadata } from "next";
 
 async function getProduct(id: string) {
   const res = await fetch(
@@ -32,19 +33,31 @@ async function getProduct(id: string) {
   return filteredProducts;
 }
 
+type Props = {
+  params: { id: string };
+};
+
+export async function generateMetadata(
+  { params }: Props,
+  parent?: ResolvingMetadata
+): Promise<Metadata> {
+  const id = params.id;
+  const product = await getProduct(id);
+  return { title: `${product.name} | Ignite Shop` };
+}
+
 export default async function Product({
   params: { id },
 }: {
   params: { id: string };
 }) {
-  const [isCreatingCheckout, setIsCreatingCheckout] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const product = await getProduct(id);
 
   const handleByProduct = async () => {
     try {
-      setIsCreatingCheckout(true);
-
+      setIsLoading(true);
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: {
@@ -55,17 +68,17 @@ export default async function Product({
       const data = await response.json();
       window.location.href = data.checkoutUrl;
     } catch (err) {
-      setIsCreatingCheckout(false);
+      setIsLoading(false);
 
       alert("Falha ao Redirecionar ao checkout!");
     }
   };
 
+  console.log(isLoading);
+
   return (
     <>
-      <Head>
-        <title>{product.name} | Ignite Shop</title>
-      </Head>
+      <Loader isLoading={isLoading} />
       <main className="mx-auto grid max-w-6xl grid-cols-shop items-stretch gap-16">
         <div className="flex h-product w-full max-w-xl items-center justify-center rounded-lg bg-gradient-to-b from-green200 to-purple100 p-1">
           <Image
@@ -88,7 +101,7 @@ export default async function Product({
           <button
             className="mt-auto cursor-pointer rounded-lg border-0 bg-green500 p-5 text-md font-bold text-white hover:bg-green300 disabled:bg-green500 disabled:opacity-50"
             onClick={handleByProduct}
-            disabled={isCreatingCheckout}
+            disabled={isLoading}
           >
             Comprar agora
           </button>

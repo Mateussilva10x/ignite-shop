@@ -32,10 +32,10 @@ export default async function Success({
     <>
       <main className="mx-auto my-0 flex h-product flex-col items-center justify-center">
         <h1 className="text-2xl text-gray100">Compra efetuada!</h1>
-        <div className="mt-16 flex min-h-successScreen w-full max-w-successScreen items-center justify-center rounded-lg bg-gradient-to-b from-green200 to-purple100 p-1">
+        <div className="mt-16 flex min-h-successScreen w-full max-w-md items-center justify-center rounded-lg bg-gradient-to-b from-green200 to-purple100 p-1">
           <Image
             src={product.images[0]}
-            width={120}
+            width={300}
             height={110}
             alt=""
             className="object-cover"

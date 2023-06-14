@@ -2,7 +2,6 @@
 import Stripe from "stripe";
 import Image from "next/image";
 import { useState } from "react";
-import { Loader } from "@/components/Loader.";
 import { Metadata, ResolvingMetadata } from "next";
 
 async function getProduct(id: string) {
@@ -74,11 +73,8 @@ export default async function Product({
     }
   };
 
-  console.log(isLoading);
-
   return (
     <>
-      <Loader isLoading={isLoading} />
       <main className="mx-auto grid max-w-6xl grid-cols-shop items-stretch gap-16">
         <div className="flex h-product w-full max-w-xl items-center justify-center rounded-lg bg-gradient-to-b from-green200 to-purple100 p-1">
           <Image

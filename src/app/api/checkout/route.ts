@@ -1,11 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-interface Props {
-  request: Request;
-}
-
-export async function POST({ request }: Props) {
+export async function POST(request: NextRequest) {
   const data = await request.json();
 
   if (!data) {

@@ -60,7 +60,7 @@ export default async function Home() {
         className="keen-slider flex  min-h-shopScreen w-full"
         ref={sliderRef}
       >
-        {products?.map((product: Product) => {
+        {products.map((product: Product) => {
           return (
             <Link
               key={product.id}

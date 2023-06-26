@@ -2,7 +2,6 @@
 import Stripe from "stripe";
 import Image from "next/image";
 import { useState } from "react";
-import { Metadata, ResolvingMetadata } from "next";
 
 async function getProduct(id: string) {
   const res = await fetch(
@@ -35,15 +34,6 @@ async function getProduct(id: string) {
 type Props = {
   params: { id: string };
 };
-
-export async function generateMetadata(
-  { params }: Props,
-  parent?: ResolvingMetadata
-): Promise<Metadata> {
-  const id = params.id;
-  const product = await getProduct(id);
-  return { title: `${product.name} | Ignite Shop` };
-}
 
 export default async function Product({
   params: { id },

@@ -1,13 +1,8 @@
-import { NextApiRequest } from "next";
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-type Price = {
-  priceId?: string;
-};
-
 export async function POST(request: Request) {
-  const data: Price = await request.json();
+  const data = await request.json();
 
   if (!data) {
     return NextResponse.json({ error: "Price not found" });
